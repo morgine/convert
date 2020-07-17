@@ -8,27 +8,31 @@ import (
 )
 
 func ExampleMultiples() {
-	var (
-		any convert.Value // all convert implemented the interface
-		i32 int32
-		i64 int64
-		str string
-		err error
-	)
+	var err error
+	var value convert.Value
 
-	any = convert.MustGetValue(1987) // automatic conversion type
+	value, err = convert.GetValue(1987) // automatic convert types
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(value.String() == "1987")
 
-	i32, _ = any.Int32()
+	value = convert.Bool(false)
+	i, _ := value.Int()
+	fmt.Println(i == 0)
 
-	str = convert.Int32(i32).String()
+	value = convert.String("1")
+	i16, _ := value.Int16()
+	fmt.Println(i16 == int16(1))
 
-	i64, _ = convert.String(str).Int64()
-
-	_, err = convert.Int64(i64).Int8()
-
+	value = convert.Int64(1987)
+	_, err = value.Int8()
 	fmt.Println(err == convert.ErrOutOfInt8Range)
 
 	// Output:
+	// true
+	// true
+	// true
 	// true
 }
 
